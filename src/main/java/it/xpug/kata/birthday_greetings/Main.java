@@ -1,16 +1,19 @@
 package it.xpug.kata.birthday_greetings;
 
-import java.io.*;
-import java.text.ParseException;
-
-import javax.mail.*;
-import javax.mail.internet.*;
+import it.xpug.kata.birthday_greetings.application.Birthday;
+import it.xpug.kata.birthday_greetings.domain.EmployeeRepository;
+import it.xpug.kata.birthday_greetings.domain.XDate;
+import it.xpug.kata.birthday_greetings.infrastructure.EmailNotifier;
+import it.xpug.kata.birthday_greetings.infrastructure.EmployeeFileRepository;
 
 public class Main {
 
-	public static void main(String[] args) throws AddressException, IOException, ParseException, MessagingException {
-		BirthdayService service = new BirthdayService();
-		service.sendGreetings("employee_data.txt", new XDate(), "localhost", 25);
+	public static void main(String[] args) throws Exception {
+		EmployeeRepository employeeRepository = new EmployeeFileRepository("employee_data.txt");
+		EmailNotifier emailNotifier = new EmailNotifier("localhost", 9999);
+		Birthday service = new Birthday(employeeRepository, emailNotifier);
+
+		service.sendGreetings(XDate.today());
 	}
 
 }
