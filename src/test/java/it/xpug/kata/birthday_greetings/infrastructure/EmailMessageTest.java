@@ -23,7 +23,7 @@ public class EmailMessageTest {
 
     assertThat(message.getRecipient(), is(RECIPIENT_EMAIL));
     assertThat(message.getSender(), is("sender@here.com"));
-    assertThat(message.getSubject(), is("Happy Birthday!"));
-    assertThat(message.getBody(), is("Happy Birthday, dear Maria!"));
+    assertThat(message.getSubject(), is("Happy GreetBirthdays!"));
+    assertThat(message.getBody(), is("Happy GreetBirthdays, dear Maria!"));
   }
 }

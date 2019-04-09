@@ -20,7 +20,7 @@ public class EmployeeFileRepository implements EmployeeRepository {
   }
 
   public List<Employee> list() throws EmployeeNotFound {
-    List<Employee> employees = new ArrayList<Employee>();
+    List<Employee> employees = new ArrayList<>();
 
     try {
       BufferedReader file = new BufferedReader(new FileReader(fileName));

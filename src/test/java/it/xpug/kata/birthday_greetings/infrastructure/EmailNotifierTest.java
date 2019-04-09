@@ -6,6 +6,8 @@ import com.dumbster.smtp.SimpleSmtpServer;
 import com.dumbster.smtp.SmtpMessage;
 import it.xpug.kata.birthday_greetings.domain.Employee;
 import it.xpug.kata.birthday_greetings.domain.XDate;
+import javax.mail.MessagingException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class EmailNotifierTest {
@@ -31,7 +33,20 @@ public class EmailNotifierTest {
 
     assertEquals(1, recipients.length);
     assertEquals("maria@medina.com", recipients[0]);
-    assertEquals("Happy Birthday!", header);
-    assertEquals("Happy Birthday, dear Maria!", body);
+    assertEquals("Happy GreetBirthdays!", header);
+    assertEquals("Happy GreetBirthdays, dear Maria!", body);
+  }
+
+  @Ignore
+  @Test(expected = MessagingException.class)
+  public void logsErrorIfEmailCannotBeSent() throws Exception {
+    EmailNotifier emailNotifier = new EmailNotifier("localhost", NONSTANDARD_PORT);
+
+    Employee employee = new Employee("Maria",
+        "Medina",
+        XDate.from("1990/01/31"),
+        "maria@medina.com");
+
+    emailNotifier.send(employee);
   }
 }

@@ -13,9 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class BirthdayIntegrationTest {
+public class GreetBirthdaysIntegrationTest {
 
-	private Birthday birthday;
+	private GreetBirthdays greetBirthdays;
 	private EmailNotifier emailNotifier;
 	private EmployeeRepository employeeRepository;
 	private SimpleSmtpServer mailServer;
@@ -27,7 +27,7 @@ public class BirthdayIntegrationTest {
 		mailServer = SimpleSmtpServer.start(NONSTANDARD_PORT);
 		employeeRepository = new EmployeeFileRepository("employee_data.txt");
 		emailNotifier = new EmailNotifier("localhost", NONSTANDARD_PORT);
-		birthday = new Birthday(employeeRepository, emailNotifier);
+		greetBirthdays = new GreetBirthdays(employeeRepository, emailNotifier);
 	}
 
 	@After
@@ -38,14 +38,14 @@ public class BirthdayIntegrationTest {
 
 	@Test
 	public void sendsGreetingEmailWhenSomeonesBirthday() throws EmployeeNotFound {
-		birthday.sendGreetings(XDate.from("2008/10/08"));
+		greetBirthdays.forDay(XDate.from("2008/10/08"));
 
 		assertEquals(1, mailServer.getReceivedEmailSize());
 	}
 
 	@Test
 	public void doesNotSendGreetingEmailWhenNoOnesBirthday() throws EmployeeNotFound {
-		birthday.sendGreetings(XDate.from("2008/01/01"));
+		greetBirthdays.forDay(XDate.from("2008/01/01"));
 
 		assertEquals(0, mailServer.getReceivedEmailSize());
 	}

@@ -8,11 +8,15 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EmailNotifier implements MessageNotifier {
 
   private final String smtpHost;
   private final int smtpPort;
+
+  private static Logger logger = LoggerFactory.getLogger(EmailNotifier.class);
 
   public EmailNotifier(String smtpHost, int smtpPort) {
     this.smtpHost = smtpHost;
@@ -28,8 +32,7 @@ public class EmailNotifier implements MessageNotifier {
       Message message = buildMessage(emailMessage, session);
       Transport.send(message);
     } catch (MessagingException e) {
-      //Generate a log instead
-      System.out.println("Error sending the message");
+      logger.error("Error sending the message to the employee");
     }
   }
 

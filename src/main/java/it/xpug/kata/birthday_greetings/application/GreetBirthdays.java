@@ -4,25 +4,24 @@ import it.xpug.kata.birthday_greetings.domain.Employee;
 import it.xpug.kata.birthday_greetings.domain.EmployeeNotFound;
 import it.xpug.kata.birthday_greetings.domain.EmployeeRepository;
 import it.xpug.kata.birthday_greetings.domain.XDate;
-import it.xpug.kata.birthday_greetings.infrastructure.EmailNotifier;
 import java.util.List;
 
-public class Birthday {
+public class GreetBirthdays {
 
   private EmployeeRepository employeeRepository;
-  private EmailNotifier emailNotifier;
+  private MessageNotifier messageNotifier;
 
-  public Birthday(EmployeeRepository employeeRepository, EmailNotifier emailNotifier) {
+  public GreetBirthdays(EmployeeRepository employeeRepository, MessageNotifier messageNotifier) {
     this.employeeRepository = employeeRepository;
-    this.emailNotifier = emailNotifier;
+    this.messageNotifier = messageNotifier;
   }
 
-  public void sendGreetings(XDate xDate) throws EmployeeNotFound {
+  public void forDay(XDate xDate) throws EmployeeNotFound {
     List<Employee> employees = employeeRepository.list();
 
     for (Employee employee : employees) {
       if (employee.isBirthday(xDate)) {
-        emailNotifier.send(employee);
+        messageNotifier.send(employee);
       }
     }
 	}

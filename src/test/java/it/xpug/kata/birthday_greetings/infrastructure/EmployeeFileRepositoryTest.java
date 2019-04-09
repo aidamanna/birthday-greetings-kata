@@ -24,7 +24,7 @@ public class EmployeeFileRepositoryTest {
   }
 
   @Test(expected = EmployeeNotFound.class)
-  public void throwsEmployeeNotFoundExceptionIfItCannotReadEmployessFile() throws EmployeeNotFound {
+  public void throwsEmployeeNotFoundExceptionIfItCannotReadEmployeesFile() throws EmployeeNotFound {
     EmployeeFileRepository employeeRepository =
         new EmployeeFileRepository("_employee_data.txt");
 

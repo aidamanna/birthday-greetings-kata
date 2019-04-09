@@ -10,7 +10,7 @@ public class EmailMessage {
   private final String body;
 
   public static final String SENDER_EMAIL = "sender@here.com";
-  public static final String SUBJECT = "Happy Birthday!";
+  public static final String SUBJECT = "Happy GreetBirthdays!";
 
   private EmailMessage(String recipient, String sender, String subject, String body) {
     this.recipient = recipient;
@@ -45,6 +45,6 @@ public class EmailMessage {
   }
 
   private static String greetingBody(Employee employee) {
-    return "Happy Birthday, dear %NAME%!".replace("%NAME%", employee.getFirstName());
+    return "Happy GreetBirthdays, dear %NAME%!".replace("%NAME%", employee.getFirstName());
   }
 }
