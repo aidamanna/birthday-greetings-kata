@@ -13,10 +13,17 @@ public class EmployeeTest {
 	}
 
   @Test
-	public void returnsFalseIfIsNotEmployeeBirthday() {
+	public void returnsFalseIfIsNotEmployeeBirthdayBecauseDayIsDifferent() {
 		Employee employee = anEmployee("1990/01/31");
 
 		assertFalse(employee.isBirthday(XDate.from("2008/01/30")));
+	}
+
+	@Test
+	public void returnsFalseIfIsNotEmployeeBirthdayBecauseMonthIsDifferent() {
+		Employee employee = anEmployee("1990/01/12");
+
+		assertFalse(employee.isBirthday(XDate.from("2008/02/12")));
 	}
 
 	@Test
