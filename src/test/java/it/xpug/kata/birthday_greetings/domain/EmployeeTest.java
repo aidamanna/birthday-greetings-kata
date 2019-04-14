@@ -1,42 +1,39 @@
 package it.xpug.kata.birthday_greetings.domain;
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import org.junit.*;
 
 public class EmployeeTest {
 
 	@Test
 	public void returnsTrueIfIsEmployeeBirthday() {
-		Employee employee = anEmployee("1990/01/31");
+		Employee employee = anEmployee();
+		LocalDate today = LocalDate.of(2008, 1, 12);
 
-		assertTrue(employee.isBirthday(XDate.from("2008/01/31")));
+		assertTrue(employee.isBirthday(today));
 	}
 
   @Test
 	public void returnsFalseIfIsNotEmployeeBirthdayBecauseDayIsDifferent() {
-		Employee employee = anEmployee("1990/01/31");
+		Employee employee = anEmployee();
+		LocalDate today = LocalDate.of(2008, 1, 30);
 
-		assertFalse(employee.isBirthday(XDate.from("2008/01/30")));
+		assertFalse(employee.isBirthday(today));
 	}
 
 	@Test
 	public void returnsFalseIfIsNotEmployeeBirthdayBecauseMonthIsDifferent() {
-		Employee employee = anEmployee("1990/01/12");
+		Employee employee = anEmployee();
+		LocalDate today = LocalDate.of(2008, 2, 12);
 
-		assertFalse(employee.isBirthday(XDate.from("2008/02/12")));
+		assertFalse(employee.isBirthday(today));
 	}
 
-	@Test
-	public void returnsFalseIfEmployeeBirthdayIsNotDefined() {
-		Employee employee = anEmployee("1990/01");
-
-		assertFalse(employee.isBirthday(XDate.from("2008/01/30")));
-	}
-
-  private Employee anEmployee(String birthday) {
+  private Employee anEmployee() {
     return new Employee("Maria",
         "Medina",
-        XDate.from(birthday),
+        LocalDate.of(1990, 1, 12),
         "maria@medina.com");
   }
 }

@@ -1,13 +1,13 @@
 package it.xpug.kata.birthday_greetings.infrastructure;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 import it.xpug.kata.birthday_greetings.domain.Employee;
-import it.xpug.kata.birthday_greetings.domain.XDate;
+import java.time.LocalDate;
 import org.junit.Test;
 
-public class EmailMessageTest {
+public class BirthdayEmailMessageTest {
 
   public static final String RECIPIENT_EMAIL = "maria@medina.com";
 
@@ -16,10 +16,10 @@ public class EmailMessageTest {
   public void generatesEmailMessageForEmployee() {
     Employee employee = new Employee("Maria",
         "Medina",
-        XDate.from("1990/01/31"),
+        LocalDate.of(1990, 1, 31),
         RECIPIENT_EMAIL);
 
-    EmailMessage message = EmailMessage.generateFor(employee);
+    BirthdayEmailMessage message = BirthdayEmailMessage.generateFor(employee);
 
     assertThat(message.getRecipient(), is(RECIPIENT_EMAIL));
     assertThat(message.getSender(), is("sender@here.com"));

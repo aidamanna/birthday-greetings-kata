@@ -1,13 +1,14 @@
 package it.xpug.kata.birthday_greetings.infrastructure;
 
+import it.xpug.kata.birthday_greetings.domain.CannotListEmployees;
 import it.xpug.kata.birthday_greetings.domain.Employee;
-import it.xpug.kata.birthday_greetings.domain.EmployeeNotFound;
 import it.xpug.kata.birthday_greetings.domain.EmployeeRepository;
-import it.xpug.kata.birthday_greetings.domain.XDate;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,31 +20,47 @@ public class EmployeeFileRepository implements EmployeeRepository {
     this.fileName = fileName;
   }
 
-  public List<Employee> list() throws EmployeeNotFound {
+  public List<Employee> all() throws CannotListEmployees {
     List<Employee> employees = new ArrayList<>();
 
-    try {
-      BufferedReader file = new BufferedReader(new FileReader(fileName));
-      file.readLine(); // skip header
+    BufferedReader file = getFile();
+    String line;
 
-      String line;
+    while ((line = getNextLine(file)) != null) {
+      String[] employeeData = line.split(", ");
 
-      while ((line = file.readLine()) != null) {
-        String[] employeeData = line.split(", ");
-        Employee employee = new Employee(
-            employeeData[1],
-            employeeData[0],
-            XDate.from(employeeData[2]),
-            employeeData[3]);
+      Employee employee = new Employee(
+          employeeData[1],
+          employeeData[0],
+          getBirthday(employeeData[2]),
+          employeeData[3]);
 
-        employees.add(employee);
-      }
-    } catch (FileNotFoundException exception) {
-      throw  new EmployeeNotFound("Cannot find the employees file", exception);
-    } catch (IOException exception) {
-      throw  new EmployeeNotFound("Cannot read the employee file", exception);
+      employees.add(employee);
     }
 
     return employees;
+  }
+
+  private BufferedReader getFile() throws CannotListEmployees {
+    try {
+      BufferedReader file = new BufferedReader(new FileReader(fileName));
+      getNextLine(file);
+      return file;
+    } catch (FileNotFoundException exception) {
+      throw new CannotListEmployees("Cannot find the employees file");
+    }
+  }
+
+  private String getNextLine(BufferedReader file) throws CannotListEmployees {
+    try {
+      return file.readLine();
+    } catch (IOException exception) {
+      throw new CannotListEmployees("Cannot read the line");
+    }
+  }
+
+  private LocalDate getBirthday(String stringDate) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+    return LocalDate.parse(stringDate, formatter);
   }
 }

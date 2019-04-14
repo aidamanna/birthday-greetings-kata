@@ -1,6 +1,6 @@
 package it.xpug.kata.birthday_greetings.infrastructure;
 
-import it.xpug.kata.birthday_greetings.application.MessageNotifier;
+import it.xpug.kata.birthday_greetings.domain.BirthdayNotifier;
 import it.xpug.kata.birthday_greetings.domain.Employee;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -11,25 +11,25 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EmailNotifier implements MessageNotifier {
+public class BirthdayEmailNotifier implements BirthdayNotifier {
 
   private final String smtpHost;
   private final int smtpPort;
 
-  private static Logger logger = LoggerFactory.getLogger(EmailNotifier.class);
+  private static Logger logger = LoggerFactory.getLogger(BirthdayEmailNotifier.class);
 
-  public EmailNotifier(String smtpHost, int smtpPort) {
+  public BirthdayEmailNotifier(String smtpHost, int smtpPort) {
     this.smtpHost = smtpHost;
     this.smtpPort = smtpPort;
   }
 
 
   public void send(Employee employee) {
-    EmailMessage emailMessage= EmailMessage.generateFor(employee);
+    BirthdayEmailMessage birthdayEmailMessage = BirthdayEmailMessage.generateFor(employee);
     Session session = createSession();
 
     try {
-      Message message = buildMessage(emailMessage, session);
+      Message message = buildMessage(birthdayEmailMessage, session);
       Transport.send(message);
     } catch (MessagingException e) {
       logger.error("Error sending the message to the employee");
@@ -43,14 +43,14 @@ public class EmailNotifier implements MessageNotifier {
     return Session.getInstance(props, null);
   }
 
-  private Message buildMessage(EmailMessage emailMessage, Session session)
+  private Message buildMessage(BirthdayEmailMessage birthdayEmailMessage, Session session)
       throws MessagingException {
     Message message = new MimeMessage(session);
-    message.setFrom(new InternetAddress(emailMessage.getSender()));
+    message.setFrom(new InternetAddress(birthdayEmailMessage.getSender()));
     message.setRecipient(Message.RecipientType.TO,
-        new InternetAddress(emailMessage.getRecipient()));
-    message.setSubject(emailMessage.getSubject());
-    message.setText(emailMessage.getBody());
+        new InternetAddress(birthdayEmailMessage.getRecipient()));
+    message.setSubject(birthdayEmailMessage.getSubject());
+    message.setText(birthdayEmailMessage.getBody());
 
     return message;
   }

@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface EmployeeRepository {
 
-  List<Employee> list() throws EmployeeNotFound;
+  List<Employee> all() throws CannotListEmployees;
 }

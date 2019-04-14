@@ -2,7 +2,7 @@ package it.xpug.kata.birthday_greetings.infrastructure;
 
 import it.xpug.kata.birthday_greetings.domain.Employee;
 
-public class EmailMessage {
+public class BirthdayEmailMessage {
 
   private final String recipient;
   private final String sender;
@@ -12,15 +12,15 @@ public class EmailMessage {
   public static final String SENDER_EMAIL = "sender@here.com";
   public static final String SUBJECT = "Happy GreetBirthdays!";
 
-  private EmailMessage(String recipient, String sender, String subject, String body) {
+  private BirthdayEmailMessage(String recipient, String sender, String subject, String body) {
     this.recipient = recipient;
     this.sender = sender;
     this.subject = subject;
     this.body = body;
   }
 
-  public static EmailMessage generateFor(Employee employee) {
-    return new EmailMessage(
+  public static BirthdayEmailMessage generateFor(Employee employee) {
+    return new BirthdayEmailMessage(
         employee.getEmail(),
         SENDER_EMAIL,
         SUBJECT,

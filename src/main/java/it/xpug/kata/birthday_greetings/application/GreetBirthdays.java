@@ -1,28 +1,34 @@
 package it.xpug.kata.birthday_greetings.application;
 
+import it.xpug.kata.birthday_greetings.domain.BirthdayNotifier;
+import it.xpug.kata.birthday_greetings.domain.CannotListEmployees;
 import it.xpug.kata.birthday_greetings.domain.Employee;
-import it.xpug.kata.birthday_greetings.domain.EmployeeNotFound;
 import it.xpug.kata.birthday_greetings.domain.EmployeeRepository;
-import it.xpug.kata.birthday_greetings.domain.XDate;
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.List;
 
 public class GreetBirthdays {
 
   private EmployeeRepository employeeRepository;
-  private MessageNotifier messageNotifier;
+  private BirthdayNotifier birthdayNotifier;
+  private Clock clock;
 
-  public GreetBirthdays(EmployeeRepository employeeRepository, MessageNotifier messageNotifier) {
+  public GreetBirthdays(EmployeeRepository employeeRepository, BirthdayNotifier birthdayNotifier,
+      Clock clock) {
     this.employeeRepository = employeeRepository;
-    this.messageNotifier = messageNotifier;
+    this.birthdayNotifier = birthdayNotifier;
+    this.clock = clock;
   }
 
-  public void forDay(XDate xDate) throws EmployeeNotFound {
-    List<Employee> employees = employeeRepository.list();
+  public void ofToday() throws CannotListEmployees {
+    List<Employee> employees = employeeRepository.all();
+    LocalDate today = LocalDate.now(clock);
 
     for (Employee employee : employees) {
-      if (employee.isBirthday(xDate)) {
-        messageNotifier.send(employee);
-      }
+        if (employee.isBirthday(today)) {
+          birthdayNotifier.send(employee);
+        }
     }
 	}
 }

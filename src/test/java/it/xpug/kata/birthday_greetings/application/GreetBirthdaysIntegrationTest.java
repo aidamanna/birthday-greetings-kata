@@ -3,11 +3,13 @@ package it.xpug.kata.birthday_greetings.application;
 import static org.junit.Assert.assertEquals;
 
 import com.dumbster.smtp.SimpleSmtpServer;
-import it.xpug.kata.birthday_greetings.domain.EmployeeNotFound;
+import it.xpug.kata.birthday_greetings.domain.CannotListEmployees;
 import it.xpug.kata.birthday_greetings.domain.EmployeeRepository;
-import it.xpug.kata.birthday_greetings.domain.XDate;
-import it.xpug.kata.birthday_greetings.infrastructure.EmailNotifier;
+import it.xpug.kata.birthday_greetings.infrastructure.BirthdayEmailNotifier;
 import it.xpug.kata.birthday_greetings.infrastructure.EmployeeFileRepository;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,18 +18,18 @@ import org.junit.Test;
 public class GreetBirthdaysIntegrationTest {
 
 	private GreetBirthdays greetBirthdays;
-	private EmailNotifier emailNotifier;
+	private BirthdayEmailNotifier birthdayEmailNotifier;
 	private EmployeeRepository employeeRepository;
 	private SimpleSmtpServer mailServer;
+	private Clock clock;
 
-	private static final int NONSTANDARD_PORT = 9999;
+	private static final int NONSTANDARD_PORT = 9998;
 
 	@Before
 	public void setUp() {
 		mailServer = SimpleSmtpServer.start(NONSTANDARD_PORT);
 		employeeRepository = new EmployeeFileRepository("employee_data.txt");
-		emailNotifier = new EmailNotifier("localhost", NONSTANDARD_PORT);
-		greetBirthdays = new GreetBirthdays(employeeRepository, emailNotifier);
+		birthdayEmailNotifier = new BirthdayEmailNotifier("localhost", NONSTANDARD_PORT);
 	}
 
 	@After
@@ -37,15 +39,23 @@ public class GreetBirthdaysIntegrationTest {
 	}
 
 	@Test
-	public void sendsGreetingEmailWhenSomeonesBirthday() throws EmployeeNotFound {
-		greetBirthdays.forDay(XDate.from("2008/10/08"));
+	public void sendsGreetingEmailWhenSomeonesBirthday() throws CannotListEmployees {
+		clock = Clock.fixed(Instant.parse("2018-10-08T10:00:00.00Z"),
+				ZoneId.of("Europe/Madrid"));
+		greetBirthdays = new GreetBirthdays(employeeRepository, birthdayEmailNotifier, clock);
+
+		greetBirthdays.ofToday();
 
 		assertEquals(1, mailServer.getReceivedEmailSize());
 	}
 
 	@Test
-	public void doesNotSendGreetingEmailWhenNoOnesBirthday() throws EmployeeNotFound {
-		greetBirthdays.forDay(XDate.from("2008/01/01"));
+	public void doesNotSendGreetingEmailWhenNoOnesBirthday() throws CannotListEmployees {
+		clock = Clock.fixed(Instant.parse("2008-01-01T10:00:00.00Z"),
+				ZoneId.of("Europe/Madrid"));
+		greetBirthdays = new GreetBirthdays(employeeRepository, birthdayEmailNotifier, clock);
+
+		greetBirthdays.ofToday();
 
 		assertEquals(0, mailServer.getReceivedEmailSize());
 	}

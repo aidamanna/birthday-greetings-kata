@@ -1,23 +1,25 @@
 package it.xpug.kata.birthday_greetings.domain;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Employee {
 
-	private XDate birthDate;
+	private LocalDate birthDate;
 	private String lastName;
 	private String firstName;
 	private String email;
 
-	public Employee(String firstName, String lastName, XDate birthDate, String email) {
+	public Employee(String firstName, String lastName, LocalDate birthDate, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthDate = birthDate;
 		this.email = email;
 	}
 
-	public boolean isBirthday(XDate today) {
-		return today.isSameDayMonth(birthDate);
+	public boolean isBirthday(LocalDate today) {
+		return birthDate.getDayOfMonth() == today.getDayOfMonth() &&
+				birthDate.getMonth() == today.getMonth();
 	}
 
 	public String getEmail() {
